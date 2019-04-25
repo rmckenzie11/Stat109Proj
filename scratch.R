@@ -48,4 +48,7 @@ quality_review = quality_review %>%
   mutate(start_date = date(as.POSIXct(start_date, format = "%m/%d/%Y"))) %>%
   select(-time)
 
+scores <- read_excel("scores.xlsx", sheet = "Student Achievement") %>%
+  filter(DBN %in% dbn) %>%
+  select(1,2,94,95,96,74,75,76)
 
