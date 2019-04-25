@@ -33,7 +33,18 @@ survey_student <- read_excel("survey_student.xlsx") %>%
 
 quality_review <- read_csv("2005_-_2018_Quality_Review_Ratings.csv") %>%
   filter(BN %in% dbn2) %>%
-  clean_names() %>%
-  mutate(school_year = as.POSIXct(school_year, format = "%d/%m/%Y %H:%m:%s"))
+  clean_names()
+
+# Turn school_year into date
+quality_review = quality_review %>% 
+  separate(col = school_year, into = c("school_year", "time"), sep = " ", extra = "merge") %>%
+  mutate(school_year = date(as.POSIXct(school_year, format = "%d/%m/%Y"))) %>%
+  select(-time)
+
+# Turn start_date into date
+quality_review = quality_review %>%
+  separate(col = start_date, into = c("start_date", "time"), sep = " ", extra = "merge") %>%
+  mutate(start_date = date(as.POSIXct(start_date, format = "%d/%m/%Y"))) %>%
+  select(-time)
 
 
