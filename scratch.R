@@ -45,7 +45,7 @@ quality_review = quality_review %>%
 # Turn start_date into date
 quality_review = quality_review %>%
   separate(col = start_date, into = c("start_date", "time"), sep = " ", extra = "merge") %>%
-  mutate(start_date = date(as.POSIXct(start_date, format = "%d/%m/%Y"))) %>%
+  mutate(start_date = date(as.POSIXct(start_date, format = "%m/%d/%Y"))) %>%
   select(-time)
 
 
