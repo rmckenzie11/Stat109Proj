@@ -3,6 +3,8 @@ library(readxl)
 library(stringr)
 library(janitor)
 
+# Reading in files 
+
 sat <- read_excel("2016-17_hs_sqr.xlsx", 
                               sheet = "Additional Info") %>%
   clean_names() %>% 
@@ -32,3 +34,17 @@ survey_student <- read_excel("survey_student.xlsx") %>%
   filter(DBN %in% dbn) %>%
   clean_names()
 
+# Joining files 
+
+demographics_final = sat %>%
+  inner_join(demographics, by = "dbn")
+
+survey_student_final = sat %>% 
+  inner_join(survey_student, by = "dbn")
+
+survey_parent_final = sat %>%
+  inner_join(survey_parent, by = "dbn")
+  
+survey_teacher_final = sat %>%
+  inner_join(survey_teacher, by = "dbn")
+  
