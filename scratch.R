@@ -1,9 +1,14 @@
 library(tidyverse)
+library(readr)
 library(readxl)
 library(stringr)
 library(janitor)
 
 # Reading in files 
+
+quality_review = read_excel("2016-17_hs_sqr.xlsx") %>%
+  clean_names() %>%
+  select(-c(2:4, 28, 31:41))
 
 sat <- read_excel("2016-17_hs_sqr.xlsx", 
                               sheet = "Additional Info") %>%
@@ -11,7 +16,13 @@ sat <- read_excel("2016-17_hs_sqr.xlsx",
   select(dbn, metric_value_average_score_sat_math, 
          n_count_average_score_sat_math, 
          metric_value_average_score_sat_reading_and_writing, 
-         n_count_average_score_sat_reading_and_writing)
+         n_count_average_score_sat_reading_and_writing) %>% 
+  mutate(total_sat = metric_value_average_score_sat_math + metric_value_average_score_sat_reading_and_writing) %>%
+  mutate(total_sat_takers = n_count_average_score_sat_math) %>% 
+  select(-c(metric_value_average_score_sat_math, 
+            n_count_average_score_sat_math, 
+            metric_value_average_score_sat_reading_and_writing, 
+            n_count_average_score_sat_reading_and_writing))
 
 demographics <- read_excel("demographics.xlsx", 
                            sheet = "School")
