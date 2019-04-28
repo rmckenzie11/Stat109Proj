@@ -45,6 +45,29 @@ survey_student <- read_excel("survey_student.xlsx") %>%
   filter(DBN %in% dbn) %>%
   clean_names()
 
+# Changing factor levels 
+
+quality_review_subset = quality_review %>%
+  select(2:8)
+
+quality_review_subset[] = lapply(quality_review_subset, factor, 
+                                 levels=c("Exceeding Target", "Meeting Target", "Approaching Target", "Not Meeting Target"), 
+                                 labels = c(4,3,2,1))
+
+quality_review_subset2 = quality_review %>%
+  select(15:24)
+
+quality_review_subset2[] = lapply(quality_review_subset2, factor, 
+                                  levels=c("Well Developed", "Proficient", "Developing", "Under Developed"), 
+                                  labels = c(4,3,2,1))
+
+
+quality_review_subset3 = quality_review %>%
+  select(c(1, 9:14, 25:31))
+
+quality_review = cbind(quality_review_subset3, quality_review_subset, quality_review_subset2) %>%
+  mutate_if(is.factor, as.numeric)
+
 # Joining files 
 
 demographics_final = sat %>%
