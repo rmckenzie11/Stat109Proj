@@ -23,7 +23,7 @@ sat <- read_excel("2016-17_hs_sqr.xlsx",
             n_count_average_score_sat_math, 
             metric_value_average_score_sat_reading_and_writing, 
             n_count_average_score_sat_reading_and_writing)) %>%
-  mutate(perc = pnorm((sat$total_sat - mean(na.omit(sat$total_sat))) / sd(na.omit(sat$total_sat))))
+  mutate(sat_perc = pnorm((sat$total_sat - mean(na.omit(sat$total_sat))) / sd(na.omit(sat$total_sat))))
 
 demographics <- read_excel("demographics.xlsx", 
                            sheet = "School")
@@ -84,4 +84,6 @@ survey_teacher_final = sat %>%
   inner_join(survey_teacher, by = "dbn")
 
 quality_review_final = sat %>%
-  inner_join(quality_review, by = "dbn")
+  inner_join(quality_review, by = "dbn") %>%
+  mutate(total_grade_8_score = (average_grade_8_english_proficiency + average_grade_8_math_proficiency) / 2,
+         grade_8_perc = pnorm((total_grade_8_score - mean(total_grade_8_score)) / sd(na.omit(total_grade_8_score))))
