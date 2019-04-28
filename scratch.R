@@ -11,7 +11,7 @@ quality_review = read_excel("2016-17_hs_sqr.xlsx") %>%
   select(-c(2:4, 28, 31:41))
 
 sat <- read_excel("2016-17_hs_sqr.xlsx", 
-                  sheet = "Additional Info") %>%
+                              sheet = "Additional Info") %>%
   clean_names() %>% 
   select(dbn, metric_value_average_score_sat_math, 
          n_count_average_score_sat_math, 
@@ -55,9 +55,9 @@ survey_student_final = sat %>%
 
 survey_parent_final = sat %>%
   inner_join(survey_parent, by = "dbn")
-
+  
 survey_teacher_final = sat %>%
   inner_join(survey_teacher, by = "dbn")
-
+  
 quality_review_final = sat %>%
   inner_join(quality_review, by = "dbn")
