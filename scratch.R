@@ -59,3 +59,5 @@ survey_parent_final = sat %>%
 survey_teacher_final = sat %>%
   inner_join(survey_teacher, by = "dbn")
 
+quality_review_final = sat %>%
+  inner_join(quality_review, by = "dbn")
