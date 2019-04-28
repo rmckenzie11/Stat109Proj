@@ -1,23 +1,35 @@
-
 library(tidyverse)
+library(readr)
 library(readxl)
 library(stringr)
 library(janitor)
-library(lubridate)
+
+# Reading in files 
+
+quality_review = read_excel("2016-17_hs_sqr.xlsx") %>%
+  clean_names() %>%
+  select(-c(2:4, 28, 31:41))
 
 sat <- read_excel("2016-17_hs_sqr.xlsx", 
-                              sheet = "Additional Info") %>%
-  clean_names() %>%
-  select(1,2,58:61)
+                  sheet = "Additional Info") %>%
+  clean_names() %>% 
+  select(dbn, metric_value_average_score_sat_math, 
+         n_count_average_score_sat_math, 
+         metric_value_average_score_sat_reading_and_writing, 
+         n_count_average_score_sat_reading_and_writing) %>% 
+  mutate(total_sat = metric_value_average_score_sat_math + metric_value_average_score_sat_reading_and_writing) %>%
+  mutate(total_sat_takers = n_count_average_score_sat_math) %>% 
+  select(-c(metric_value_average_score_sat_math, 
+            n_count_average_score_sat_math, 
+            metric_value_average_score_sat_reading_and_writing, 
+            n_count_average_score_sat_reading_and_writing))
 
 demographics <- read_excel("demographics.xlsx", 
                            sheet = "School")
-
 demographics <- demographics %>%
   filter(Year == "2016-17",
          `Grade 12` > 0) %>%
   clean_names()
-
 dbn <- demographics$dbn
 dbn2 <- str_sub(dbn, start = -4)
 
@@ -33,23 +45,17 @@ survey_student <- read_excel("survey_student.xlsx") %>%
   filter(DBN %in% dbn) %>%
   clean_names()
 
-quality_review <- read_csv("2005_-_2018_Quality_Review_Ratings.csv") %>%
-  filter(BN %in% dbn2) %>%
-  clean_names()
+# Joining files 
 
-# Turn school_year into date
-quality_review = quality_review %>% 
-  separate(col = school_year, into = c("school_year", "time"), sep = " ", extra = "merge") %>%
-  mutate(school_year = date(as.POSIXct(school_year, format = "%d/%m/%Y"))) %>%
-  select(-time)
+demographics_final = sat %>%
+  inner_join(demographics, by = "dbn")
 
-# Turn start_date into date
-quality_review = quality_review %>%
-  separate(col = start_date, into = c("start_date", "time"), sep = " ", extra = "merge") %>%
-  mutate(start_date = date(as.POSIXct(start_date, format = "%m/%d/%Y"))) %>%
-  select(-time)
+survey_student_final = sat %>% 
+  inner_join(survey_student, by = "dbn")
 
-scores <- read_excel("scores.xlsx", sheet = "Ad") %>%
-  filter(DBN %in% dbn) %>%
-  select(1,2,94,95,96,74,75,76)
+survey_parent_final = sat %>%
+  inner_join(survey_parent, by = "dbn")
+
+survey_teacher_final = sat %>%
+  inner_join(survey_teacher, by = "dbn")
 
