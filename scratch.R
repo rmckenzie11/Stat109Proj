@@ -1,9 +1,7 @@
-
 library(tidyverse)
 library(readxl)
 library(stringr)
 library(janitor)
-library(lubridate)
 
 sat <- read_excel("2016-17_hs_sqr.xlsx", 
                               sheet = "Additional Info") %>%
