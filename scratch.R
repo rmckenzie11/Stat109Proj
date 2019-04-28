@@ -7,7 +7,8 @@ library(lubridate)
 
 sat <- read_excel("2016-17_hs_sqr.xlsx", 
                               sheet = "Additional Info") %>%
-  clean_names()
+  clean_names() %>%
+  select(1,2,58:61)
 
 demographics <- read_excel("demographics.xlsx", 
                            sheet = "School")
@@ -48,7 +49,7 @@ quality_review = quality_review %>%
   mutate(start_date = date(as.POSIXct(start_date, format = "%m/%d/%Y"))) %>%
   select(-time)
 
-scores <- read_excel("scores.xlsx", sheet = "Student Achievement") %>%
+scores <- read_excel("scores.xlsx", sheet = "Ad") %>%
   filter(DBN %in% dbn) %>%
   select(1,2,94,95,96,74,75,76)
 
