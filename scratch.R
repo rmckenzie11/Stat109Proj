@@ -71,6 +71,14 @@ quality_review = cbind(quality_review_subset3, quality_review_subset, quality_re
 
 # Joining files 
 
+quality_review_final = sat %>%
+  inner_join(quality_review, by = "dbn") %>%
+  mutate(total_grade_8_score = (average_grade_8_english_proficiency + average_grade_8_math_proficiency) / 2,
+         grade_8_perc = pnorm((total_grade_8_score - mean(total_grade_8_score)) / sd(na.omit(total_grade_8_score))),
+         delta = sat_perc - grade_8_perc)
+
+perc <- quality_review_final[c("dbn", "delta")]
+
 demographics_final = sat %>%
   inner_join(demographics, by = "dbn") %>%
   inner_join(perc, by = "dbn")
@@ -87,12 +95,4 @@ survey_teacher_final = sat %>%
   inner_join(survey_teacher, by = "dbn") %>%
   inner_join(perc, by = "dbn")
 
-quality_review_final = sat %>%
-  inner_join(quality_review, by = "dbn") %>%
-  mutate(total_grade_8_score = (average_grade_8_english_proficiency + average_grade_8_math_proficiency) / 2,
-         grade_8_perc = pnorm((total_grade_8_score - mean(total_grade_8_score)) / sd(na.omit(total_grade_8_score))),
-         delta = sat_perc - grade_8_perc)
-
-
-perc <- quality_review_final[c("dbn", "delta")]
 
