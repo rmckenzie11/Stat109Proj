@@ -95,5 +95,42 @@ survey_teacher_final = sat %>%
   inner_join(survey_teacher, by = "dbn") %>%
   inner_join(perc, by = "dbn")
 
+# Converting N/A to NA 
 
+survey_student_final[survey_student_final == "N/A"] <- NA
+survey_teacher_final[survey_teacher_final == "N/A"] <- NA
+survey_parent_final[survey_parent_final == "N/A"] <- NA
+
+# Creating rows for number of missing entries
+quality_review_final = quality_review_final %>% 
+  mutate(missing = rowSums(is.na(quality_review_final)))
+
+demographics_final = demographics_final %>% 
+  mutate(missing = rowSums(is.na(demographics_final)))
+
+survey_student_final = survey_student_final %>% 
+  mutate(missing = rowSums(is.na(survey_student_final)))
+
+survey_teacher_final = survey_teacher_final %>% 
+  mutate(missing = rowSums(is.na(survey_teacher_final)))
+
+survey_parent_final = survey_parent_final %>% 
+  mutate(missing = rowSums(is.na(survey_parent_final)))
+
+# Calculating number of missing entries in each column
+
+na_count_demographics <-sapply(demographics_final, function(y) sum(length(which(is.na(y)))))
+na_count_demographics <- data.frame(na_count_demographics)
+
+na_count_quality <-sapply(quality_review_final, function(y) sum(length(which(is.na(y)))))
+na_count_quality <- data.frame(na_count_quality)
+
+na_count_students <-sapply(survey_student_final, function(y) sum(length(which(is.na(y)))))
+na_count_students <- data.frame(na_count_students)
+
+na_count_teachers <-sapply(survey_teacher_final, function(y) sum(length(which(is.na(y)))))
+na_count_teachers <- data.frame(na_count_teachers)
+
+na_count_parents <-sapply(survey_parent_final, function(y) sum(length(which(is.na(y)))))
+na_count_parents <- data.frame(na_count_parents)
 
