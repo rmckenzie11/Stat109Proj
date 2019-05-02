@@ -23,7 +23,7 @@ sat <- read_excel("2016-17_hs_sqr.xlsx",
             n_count_average_score_sat_math, 
             metric_value_average_score_sat_reading_and_writing, 
             n_count_average_score_sat_reading_and_writing)) %>%
-  mutate(sat_perc = pnorm((sat$total_sat - mean(na.omit(sat$total_sat))) / sd(na.omit(sat$total_sat))))
+  mutate(sat_perc = round(pnorm((sat$total_sat - mean(na.omit(sat$total_sat)))/sd(na.omit(sat$total_sat)))*100,0))
 
 demographics <- read_excel("demographics.xlsx", 
                            sheet = "School")
@@ -94,5 +94,6 @@ survey_parent_final = sat %>%
 survey_teacher_final = sat %>%
   inner_join(survey_teacher, by = "dbn") %>%
   inner_join(perc, by = "dbn")
+
 
 
