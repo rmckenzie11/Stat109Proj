@@ -27,7 +27,8 @@ sat <- read_excel("2016-17_hs_sqr.xlsx",
             n_count_average_score_sat_math, 
             metric_value_average_score_sat_reading_and_writing, 
             n_count_average_score_sat_reading_and_writing)) %>%
-  mutate(sat_perc = round(pnorm((sat$total_sat - mean(na.omit(sat$total_sat)))/sd(na.omit(sat$total_sat)))*100,0))
+  mutate(sat_perc = round(pnorm((sat$total_sat - mean(na.omit(sat$total_sat)))/sd(na.omit(sat$total_sat)))*100,0)) %>%
+  filter(!is.na(total_sat))
 
 demographics <- read_excel("demographics.xlsx", 
                            sheet = "School")
